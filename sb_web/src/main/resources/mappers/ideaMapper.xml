@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csq.mapper.IdeaMapper">
+
+	<resultMap type="Idea" id="IdeaMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="time" property="time"
+			jdbcType="VARCHAR" />
+		<result column="person" property="person"
+			jdbcType="VARCHAR" />
+		<result column="collage" property="collage"
+			jdbcType="VARCHAR" />
+		<result column="classes" property="classes"
+			jdbcType="VARCHAR" />
+		<result column="title" property="title" 
+			jdbcType="VARCHAR" />
+		<result column="content" property="content"
+			jdbcType="VARCHAR" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="selectIdeaById"
+		parameterType="java.lang.Integer" resultMap="IdeaMap">
+		select * from idea_tb 
+		<where>
+			<if test="id!=0">
+				id = #{id,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectIdeaList"
+		parameterType="java.lang.Integer" resultMap="IdeaMap">
+		select * from idea_tb where 1 = 1
+		<if test="limit != 0">
+			limit #{startPage}, #{limit}
+		</if>
+	</select>
+
+
+
+	<select id="selectIdeaCount" resultType="java.lang.Integer">
+		select count(*)
+		from idea_tb
+	</select>
+
+
+	<update id="editIdea" parameterType="Idea">
+		update idea_tb
+		<trim prefix="set" >
+			<if test="time!=null and time!=''">lose_name = #{time}</if>
+			<if test="person!=null and person!=''">,lose_time=#{person}</if>
+			<if test="collage!=null and collage!=''">,lose_sj_man=#{collage}</if>
+			<if test="classes!=null and classes!=''">,lose_sj_phone=#{classes}</if>
+			<if test="title!=null and title!=''">,lose_man=#{title}</if>
+			<if test="content!=null and content!=''">,lose_phone=#{content}</if>
+			<if test="remarks!=null and remarks!=''">,remarks=#{remarks}</if>
+		</trim>
+		<where>
+			<if test="id != 0">
+				and id = #{id}
+			</if>
+		</where>
+	</update>
+	
+
+
+
+	<delete id="deleteIdeaById"
+		parameterType="java.lang.Integer">
+		delete from idea_tb 
+		<where>
+			<if test="id != 0">
+				and id = #{id}
+			</if>
+		</where>
+	</delete>
+
+
+	<!-- insert 的动态新增语句 start 
+	<trim prefix="" suffix="" suffixOverrides="" prefixOverrides=""></trim>
+		prefix:在trim标签内sql语句加上前缀。
+		suffix:在trim标签内sql语句加上后缀。
+		suffixOverrides:指定去除多余的后缀内容，如：suffixOverrides=","，去除trim标签内sql语句多余的后缀","。
+		prefixOverrides:指定去除多余的前缀内容
+		 <trim prefix="(" suffix=")" suffixOverrides=","> （把 尾部的，替换成 ")"）
+		
+	-->
+	<sql id="IdeaInsertKey">
+		<trim suffixOverrides=",">
+			<if test="time!=null and time!=''">lose_name,</if>
+			<if test="person!=null and person!=''">lose_time,</if>
+			<if test="collage!=null and collage!=''">lose_sj_man,</if>
+			<if test="classes!=null and classes!=''">lose_sj_phone,</if>
+			<if test="title!=null and title!=''">lose_man,</if>
+			<if test="content!=null and content!=''">lose_phone,</if>
+			<if test="remarks!=null and remarks!=''">remarks,</if>
+		</trim>
+	</sql>
+	<sql id="IdeaInsertValue">
+		<trim suffixOverrides=",">
+			<if test="time!=null and time!=''">#{time},</if>
+			<if test="person!=null and person!=''">#{person},</if>
+			<if test="collage!=null and collage!=''">#{collage},</if>
+			<if test="classes!=null and classes!=''">#{classes},</if>
+			<if test="title!=null and title!=''">#{title},</if>
+			<if test="content!=null and content!=''">#{content},</if>
+			<if test="remarks!=null and remarks!=''">#{remarks},</if>
+		</trim>
+	</sql>
+
+	<insert id="insertIdea" parameterType="Idea">
+		insert into idea_tb(
+		<include refid="IdeaInsertKey" />
+		)
+		values (
+		<include refid="IdeaInsertValue" />
+		)
+	</insert>
+	<!-- insert 的动态新增语句 end -->
+
+</mapper>

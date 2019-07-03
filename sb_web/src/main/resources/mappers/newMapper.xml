@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csq.mapper.NewMapper">
+
+	<resultMap type="New" id="newMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="new_title" property="newTitle" jdbcType="VARCHAR"/>
+		<result column="new_type" property="newType" jdbcType="VARCHAR"/>
+		<result column="new_jj" property="newJj" jdbcType="VARCHAR"/>
+		<result column="new_time" property="newTime" jdbcType="VARCHAR"/>
+		<result column="new_author" property="newAuthor" jdbcType="VARCHAR"/>
+		<result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+    <select id="findNewById" parameterType="java.lang.Integer" resultMap="newMap">
+    	select * from new_tb
+    	<where>
+    		<if test="id != 0">
+    			id = #{id,jdbcType=INTEGER}
+    		</if>
+    	</where>
+    </select>
+    
+    <select id="selectNewList" parameterType="java.lang.Integer" resultMap="newMap">
+    	select * from new_tb where 1 = 1
+    	<if test="limit != 0">
+    		limit #{startPage}, #{limit}
+    	</if>
+    </select>
+    
+ 
+
+	<select id="selectNewById" parameterType="java.lang.Integer" resultMap="newMap">
+		select * from new_tb 
+		<where>
+    		<if test="id != 0">
+    			id = #{id,jdbcType=INTEGER}
+    		</if>
+    	</where>
+	</select>
+	
+	<select id="selectNewCount" resultType="java.lang.Integer">
+		select count(*) from new_tb 
+	</select>
+	
+	
+	<update id="editNew" parameterType="New">
+		update new_tb 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newTitle!=null and newTitle!=''">new_title = #{newTitle},</if>
+			<if test="newType!=null and newType!=''">new_type=#{newType},</if>
+			<if test="newJj!=null and newJj!=''">new_jj=#{newJj},</if>
+			<if test="newTime!=null and newTime!=''">new_time=#{newTime},</if>
+			<if test="newAuthor!=null and newAuthor!=''">new_author=#{newAuthor},</if>
+			<if test="remarks!=null and remarks!=''">remarks=#{remarks},</if>
+		</trim>
+		<where>
+    		<if test="id != 0">
+    			id = #{id,jdbcType=INTEGER}
+    		</if>
+    	</where>
+	</update>
+	
+	<delete id="deleteNewById" parameterType="java.lang.Integer">
+		delete from new_tb 
+		<where>
+    		<if test="id != 0">
+    			id = #{id,jdbcType=INTEGER}
+    		</if>
+    	</where>
+	</delete>
+
+
+    <!-- insert  的动态新增语句 start -->
+    <sql id="newInsertKey">
+    	<trim suffixOverrides=",">
+    		<if test="newTitle!=null and newTitle!=''">new_title,</if>
+			<if test="newType!=null and newType!=''">new_type,</if>
+			<if test="newJj!=null and newJj!=''">new_jj,</if>
+			<if test="newTime!=null and newTime!=''">new_time,</if>
+			<if test="newAuthor!=null and newAuthor!=''">new_author,</if>
+			<if test="remarks!=null and remarks!=''">remarks,</if>
+			</trim>
+    </sql>
+    <sql id="newInsertValue">
+    	<trim suffixOverrides=",">
+			<if test="newTitle!=null and newTitle!=''">#{newTitle},</if>
+			<if test="newType!=null and newType!=''">#{newType},</if>
+			<if test="newJj!=null and newJj!=''">#{newJj},</if>
+			<if test="newTime!=null and newTime!=''">#{newTime},</if>
+			<if test="newAuthor!=null and newAuthor!=''">#{newAuthor},</if>
+			<if test="remarks!=null and remarks!=''">#{remarks},</if>
+			</trim>
+    </sql>
+    
+    <insert id="insertNew" parameterType="New">
+    	insert into new_tb(<include refid="newInsertKey" />) 
+    	values (<include refid="newInsertValue" />)
+    </insert>
+    <!-- insert  的动态新增语句 end -->
+
+</mapper>

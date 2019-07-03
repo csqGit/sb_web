@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csq.mapper.SchoolBusMapper">
+
+	<resultMap type="SchoolBus" id="schoolBusMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="bus_driver" property="busDriver" jdbcType="VARCHAR"/>
+		<result column="bus_number" property="busNumber" jdbcType="VARCHAR"/>
+		<result column="bus_come_time" property="busComeTime" jdbcType="VARCHAR"/>
+		<result column="bus_address" property="busAddress" jdbcType="VARCHAR"/>
+		<result column="bus_stop_address" property="busStopAddress" jdbcType="VARCHAR"/>
+		<result column="bus_after" property="busAfter" jdbcType="VARCHAR"/>
+		<result column="bus_stop_time" property="busStopTime" jdbcType="VARCHAR"/>
+		<result column="remark" property="remark" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+    <select id="selectSchoolBusList" parameterType="java.lang.Integer" resultMap="schoolBusMap">
+    	select * from school_bus_tb where 1=1
+    	<if test="limit != 0">
+    		limit #{startPage}, #{limit}
+    	</if>
+    </select>
+    
+    
+    <select id="selectSchoolBusById" parameterType="java.lang.Integer" resultMap="schoolBusMap">
+    	select * from school_bus_tb where id=#{id}
+   	 </select>
+   	 
+   	 
+    <select id="selectSchoolBusCount" resultType="java.lang.Integer">
+    	select count(*) from school_bus_tb
+   	 </select>
+   	 
+   	 <update id="editSchoolBus" parameterType="SchoolBus">
+   	 	 update school_bus_tb 
+   	 	 <trim prefix="set" suffixOverrides=",">
+   	 	 	<if test="busDriver!=null">bus_driver=#{busDriver},</if>
+   	 	 	<if test="busNumber!=null">bus_number=#{busNumber},</if>
+   	 	 	<if test="busComeTime!=null">bus_come_time=#{busComeTime},</if>
+   	 	 	<if test="busStopTime!=null">bus_stop_time=#{busStopTime},</if>
+   	 	 	<if test="busAddress!=null">bus_address=#{busAddress},</if>
+   	 	 	<if test="busStopAddress!=null">bus_stop_address=#{busStopAddress},</if>
+   	 	 	<if test="busAfter!=null">bus_after=#{busAfter},</if>
+   	 	 	<if test="remark!=null">remark=#{remark},</if>
+   	 	 </trim>
+   	 	 where id = #{id}
+   	 </update>
+   	 
+   	 <delete id="deleteSchoolBusById" parameterType="java.lang.Integer">
+   	 	delete from school_bus_tb where id = #{id}
+   	 </delete>
+    
+    <insert id="insertSchoolBus" parameterType="New">
+    	insert into 
+    	school_bus_tb (<include refid="insertKey" />) 
+    	values (<include refid="insertValue" />)
+    </insert>
+    
+    <!-- 动态sql插入 start-->
+    <!-- 插入语句所对应的key -->
+    <sql id="insertKey">
+    	<trim suffixOverrides=",">
+    		<if test="busDriver!=null and busDriver!=''">bus_driver,</if>
+    		<if test="busNumber!=null and busNumber!=''">bus_number,</if>
+    		<if test="busComeTime!=null and busComeTime!=''">bus_come_time,</if>
+    		<if test="busStopTime!=null and busStopTime!=''">bus_stop_time,</if>
+    		<if test="busAddress!=null and busAddress!=''">bus_address,</if>
+    		<if test="busStopAddress!=null and busStopAddress!=''">bus_stop_address,</if>
+    		<if test="busAfter!=null and busAfter!=''">bus_after,</if>
+    		<if test="remark!=null and remark!=''">remark,</if>
+    	</trim>
+    </sql>
+    
+    <!-- 插入语句的值value -->
+    <sql id="insertValue">
+    	<trim suffixOverrides=",">
+    		<if test="busDriver!=null and busDriver!=''">#{busDriver},</if>
+    		<if test="busNumber!=null and busNumber!=''">#{busNumber},</if>
+    		<if test="busComeTime!=null and busComeTime!=''">#{busComeTime},</if>
+    		<if test="busStopTime!=null and busStopTime!=''">#{busStopTime},</if>
+    		<if test="busAddress!=null and busAddress!=''">#{busAddress},</if>
+    		<if test="busStopAddress!=null and busStopAddress!=''">#{busStopAddress},</if>
+    		<if test="busAfter!=null and busAfter!=''">#{busAfter},</if>
+    		<if test="remark!=null and remark!=''">#{remark},</if>
+    	</trim>
+    </sql>
+    <!-- 动态sql插入 end-->
+
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csq.mapper.ComplainMapper">
+
+	<resultMap type="Complain" id="complainMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="complain_man" property="complainMan" jdbcType="VARCHAR"/>
+		<result column="complain_reason" property="complainReason" jdbcType="VARCHAR"/>
+		<result column="complain_company" property="complainCompany" jdbcType="VARCHAR"/>
+		<result column="complain_type" property="complainType" jdbcType="VARCHAR"/>
+		<result column="complain_time" property="complainTime" jdbcType="VARCHAR"/>
+		<result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+    <select id="selectComplainById" parameterType="java.lang.Integer" resultMap="complainMap">
+    	select * from complain_tb where id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <select id="selectComplainList" parameterType="java.lang.Integer" resultMap="complainMap">
+    	select * from complain_tb where 1 = 1
+    	<if test="limit != 0">
+    		limit #{startPage}, #{limit}
+    	</if>
+    </select>
+    
+ 
+	
+	<select id="selectComplainCount" resultType="java.lang.Integer">
+		select count(*) from complain_tb 
+	</select>
+	
+	
+	<update id="editComplain" parameterType="Complain">
+		update complain_tb 
+		<trim prefix="set" prefixOverrides=",">
+			<if test="complainMan!=null and complainMan!=''">complain_man = #{complainMan}</if>
+			<if test="complainReason!=null and complainReason!=''">,complain_reason=#{complainReason}</if>
+			<if test="complainCompany!=null and complainCompany!=''">,complain_company=#{complainCompany}</if>
+			<if test="complainType!=null and complainType!=''">,complain_type=#{complainType}</if>
+			<if test="complainTime!=null and complainTime!=''">,complain_time=#{complainTime}</if>
+			<if test="remarks!=null and remarks!=''">,remarks=#{remarks}</if>
+		</trim>
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteComplainById" parameterType="java.lang.Integer">
+		delete from complain_tb where id = #{id}
+	</delete>
+
+    
+    <!-- insert  的动态新增语句 start -->
+    <sql id="ComplainInsertKey">
+    	<trim prefixOverrides=",">
+    		<if test="complainMan!=null and complainMan!=''">complain_man,</if>
+			<if test="complainReason!=null and complainReason!=''">complain_reason,</if>
+			<if test="complainCompany!=null and complainCompany!=''">complain_company,</if>
+			<if test="complainType!=null and complainType!=''">complain_type,</if>
+			<if test="complainTime!=null and complainTime!=''">complain_time,</if>
+			<if test="remarks!=null and remarks!=''">remarks</if>
+			</trim>
+    </sql>
+    <sql id="ComplainInsertValue">
+    	<trim prefixOverrides=",">
+			<if test="complainMan!=null and complainMan!=''">#{complainMan},</if>
+			<if test="complainReason!=null and complainReason!=''">#{complainReason},</if>
+			<if test="complainCompany!=null and complainCompany!=''">#{complainCompany},</if>
+			<if test="complainType!=null and complainType!=''">#{complainType},</if>
+			<if test="complainTime!=null and complainTime!=''">#{complainTime},</if>
+			<if test="remarks!=null and remarks!=''">#{remarks}</if>
+			</trim>
+    </sql>
+    
+    <insert id="insertComplain" parameterType="Complain">
+    	insert into complain_tb(<include refid="ComplainInsertKey" />) 
+    	values (<include refid="ComplainInsertValue" />)
+    </insert>
+    <!-- insert  的动态新增语句 end -->
+
+</mapper>

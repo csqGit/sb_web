@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csq.mapper.RepairMapper">
+
+	<resultMap type="Repair" id="RepairMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="repair_name" property="repairName" jdbcType="VARCHAR"/>
+		<result column="repair_type" property="repairType" jdbcType="VARCHAR"/>
+		<result column="repair_time" property="repairTime" jdbcType="VARCHAR"/>
+		<result column="repair_type" property="repairType" jdbcType="VARCHAR"/>
+		<result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+    <select id="selectRepairById" parameterType="java.lang.Integer" resultMap="RepairMap">
+    	select * from repair_tb where id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <select id="selectRepairList" parameterType="java.lang.Integer" resultMap="RepairMap">
+    	select * from repair_tb where 1 = 1
+    	<if test="limit != 0">
+    		limit #{startPage}, #{limit}
+    	</if>
+    </select>
+    
+ 
+	
+	<select id="selectRepairCount" resultType="java.lang.Integer">
+		select count(*) from repair_tb 
+	</select>
+	
+		
+	<update id="editRepair" parameterType="Repair">
+		update repair_tb 
+		<trim prefix="set" prefixOverrides=",">
+			<if test="repairName!=null and repairName!=''">repair_name = #{repairName}</if>
+			<if test="repairType!=null and repairType!=''">,repair_type=#{repairType}</if>
+			<if test="repairTime!=null and repairTime!=''">,repair_time=#{repairTime}</if>
+			<if test="repairReason!=null and repairReason!=''">,repair_reason=#{repairReason}</if>
+			<if test="remarks!=null and remarks!=''">,remarks=#{remarks}</if>
+		</trim>
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteRepairById" parameterType="java.lang.Integer">
+		delete from repair_tb where id = #{id}
+	</delete>
+
+    
+    <!-- insert  的动态新增语句 start -->
+    <sql id="RepairInsertKey">
+    	<trim prefixOverrides=",">
+    		<if test="repairName!=null and repairName!=''">repair_name,</if>
+			<if test="repairType!=null and repairType!=''">repair_type,</if>
+			<if test="repairTime!=null and repairTime!=''">repair_time,</if>
+			<if test="repairReason!=null and repairReason!=''">Repair_reason,</if>
+			<if test="remarks!=null and remarks!=''">remarks</if>
+			</trim>
+    </sql>
+    <sql id="RepairInsertValue">
+    	<trim prefixOverrides=",">
+			<if test="repairName!=null and repairName!=''">#{repairName},</if>
+			<if test="repairType!=null and repairType!=''">#{repairType},</if>
+			<if test="repairTime!=null and repairTime!=''">#{repairTime},</if>
+			<if test="repairReason!=null and repairReason!=''">#{repairReason},</if>
+			<if test="remarks!=null and remarks!=''">#{remarks}</if>
+			</trim>
+    </sql>
+    
+    <insert id="insertRepair" parameterType="Repair">
+    	insert into repair_tb(<include refid="RepairInsertKey" />) 
+    	values (<include refid="RepairInsertValue" />)
+    </insert>
+    <!-- insert  的动态新增语句 end -->
+
+</mapper>

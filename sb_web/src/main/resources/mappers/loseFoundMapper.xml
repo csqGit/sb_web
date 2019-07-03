@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csq.mapper.LoseFoundMapper">
+
+	<resultMap type="LoseFound" id="loseFoundMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="lose_name" property="loseName"
+			jdbcType="VARCHAR" />
+		<result column="lose_time" property="loseTime"
+			jdbcType="VARCHAR" />
+		<result column="lose_sj_man" property="loseSjMan"
+			jdbcType="VARCHAR" />
+		<result column="lose_sj_phone" property="loseSjPhone"
+			jdbcType="VARCHAR" />
+		<result column="lose_man" property="loseMan" 
+			jdbcType="VARCHAR" />
+		<result column="lose_phone" property="losePhone"
+			jdbcType="VARCHAR" />
+		<result column="lose_state" property="loseState"
+			jdbcType="VARCHAR" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="selectLoseFoundById"
+		parameterType="java.lang.Integer" resultMap="loseFoundMap">
+		select * from lose_found_tb 
+		<where>
+			<if test="id!=0">
+				id = #{id,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectLoseFoundList"
+		parameterType="java.lang.Integer" resultMap="loseFoundMap">
+		select * from lose_found_tb where 1 = 1
+		<if test="limit != 0">
+			limit #{startPage}, #{limit}
+		</if>
+	</select>
+
+
+
+	<select id="selectLoseFoundCount" resultType="java.lang.Integer">
+		select count(*)
+		from lose_found_tb
+	</select>
+
+
+	<update id="editLoseFound" parameterType="LoseFound">
+		update lose_found_tb
+		<trim prefix="set" >
+			<if test="loseName!=null and loseName!=''">lose_name = #{loseName}</if>
+			<if test="loseTime!=null and loseTime!=''">,lose_time=#{loseTime}</if>
+			<if test="loseSjMan!=null and loseSjMan!=''">,lose_sj_man=#{loseSjMan}</if>
+			<if test="loseSjPhone!=null and loseSjPhone!=''">,lose_sj_phone=#{loseSjPhone}</if>
+			<if test="loseMan!=null and loseMan!=''">,lose_man=#{loseMan}</if>
+			<if test="losePhone!=null and losePhone!=''">,lose_phone=#{losePhone}</if>
+			<if test="lostState!=null and lostState!=''">,lose_state=#{lostState}</if>
+			<if test="remarks!=null and remarks!=''">,remarks=#{remarks}</if>
+		</trim>
+		<where>
+			<if test="id != 0">
+				and id = #{id}
+			</if>
+		</where>
+	</update>
+	
+
+
+
+	<delete id="deleteLoseFoundById"
+		parameterType="java.lang.Integer">
+		delete from lose_found_tb 
+		<where>
+			<if test="id != 0">
+				and id = #{id}
+			</if>
+		</where>
+	</delete>
+
+
+	<!-- insert 的动态新增语句 start 
+	<trim prefix="" suffix="" suffixOverrides="" prefixOverrides=""></trim>
+		prefix:在trim标签内sql语句加上前缀。
+		suffix:在trim标签内sql语句加上后缀。
+		suffixOverrides:指定去除多余的后缀内容，如：suffixOverrides=","，去除trim标签内sql语句多余的后缀","。
+		prefixOverrides:指定去除多余的前缀内容
+		 <trim prefix="(" suffix=")" suffixOverrides=","> （把 尾部的，替换成 ")"）
+		
+	-->
+	<sql id="LoseFoundInsertKey">
+		<trim suffixOverrides=",">
+			<if test="loseName!=null and loseName!=''">lose_name,</if>
+			<if test="loseTime!=null and loseTime!=''">lose_time,</if>
+			<if test="loseSjMan!=null and loseSjMan!=''">lose_sj_man,</if>
+			<if test="loseSjPhone!=null and loseSjPhone!=''">lose_sj_phone,</if>
+			<if test="loseMan!=null and loseMan!=''">lose_man,</if>
+			<if test="losePhone!=null and losePhone!=''">lose_phone,</if>
+			<if test="lostState!=null and lostState!=''">lost_state,</if>
+			<if test="remarks!=null and remarks!=''">remarks,</if>
+		</trim>
+	</sql>
+	<sql id="LoseFoundInsertValue">
+		<trim suffixOverrides=",">
+			<if test="loseName!=null and loseName!=''">#{loseName},</if>
+			<if test="loseTime!=null and loseTime!=''">#{loseTime},</if>
+			<if test="loseSjMan!=null and loseSjMan!=''">#{loseSjMan},</if>
+			<if test="loseSjPhone!=null and loseSjPhone!=''">#{loseSjPhone},</if>
+			<if test="loseMan!=null and loseMan!=''">#{loseMan},</if>
+			<if test="losePhone!=null and losePhone!=''">#{losePhone},</if>
+			<if test="lostState!=null and lostState!=''">#{loseState},</if>
+			<if test="remarks!=null and remarks!=''">#{remarks},</if>
+		</trim>
+	</sql>
+
+	<insert id="insertLoseFound" parameterType="LoseFound">
+		insert into lose_found_tb(
+		<include refid="LoseFoundInsertKey" />
+		)
+		values (
+		<include refid="LoseFoundInsertValue" />
+		)
+	</insert>
+	<!-- insert 的动态新增语句 end -->
+
+</mapper>
